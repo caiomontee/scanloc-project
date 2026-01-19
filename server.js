@@ -8,8 +8,8 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-const TELEGRAM_BOT_TOKEN = "8510330829:AAG5Z_9XupX2x_GqeXPgfAooOjVC61L78v8"; // Substitua pelo token do seu bot
-const TELEGRAM_CHAT_ID = "-5124871642"; // Substitua pelo ID do chat (ou grupo) para onde quer enviar
+const TELEGRAM_BOT_TOKEN = "8510330829:AAG5Z_9XupX2x_GqeXPgfAooOjVC61L78v8";
+const TELEGRAM_CHAT_ID = "-5124871642";
 
 app.post("/send-location", async (req, res) => {
   const { latitude, longitude, maps } = req.body;
@@ -30,9 +30,16 @@ app.post("/send-location", async (req, res) => {
   }
 });
 
-app.listen(8088, () => {
-  console.log("Servidor rodando na porta 8088");
+// --- AQUI FOI A CORREÇÃO ---
+// Agora ele tenta usar a porta do Render (process.env.PORT).
+// Se não tiver (no seu PC), ele usa a 8088.
+const port = process.env.PORT || 8088;
+
+app.listen(port, () => {
+  console.log(`Servidor rodando na porta ${port}`);
 });
+// ---------------------------
+
 // Serve os arquivos da pasta atual (como o index.html)
 app.use(express.static(__dirname));
 
