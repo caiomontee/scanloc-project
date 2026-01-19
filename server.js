@@ -33,3 +33,10 @@ app.post("/send-location", async (req, res) => {
 app.listen(8088, () => {
   console.log("Servidor rodando na porta 8088");
 });
+// Serve os arquivos da pasta atual (como o index.html)
+app.use(express.static(__dirname));
+
+// Quando alguém acessar o site, entrega o index.html
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/index.html');
+});
