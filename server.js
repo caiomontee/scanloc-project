@@ -30,9 +30,6 @@ app.post("/send-location", async (req, res) => {
   }
 });
 
-// --- AQUI FOI A CORREÇÃO ---
-// Agora ele tenta usar a porta do Render (process.env.PORT).
-// Se não tiver (no seu PC), ele usa a 8088.
 const port = process.env.PORT || 8088;
 
 app.listen(port, () => {
